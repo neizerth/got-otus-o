@@ -24,7 +24,7 @@ router.get("/:id", async (req: Request, res: Response) => {
 	res.json(house);
 });
 
-// POST /houses — создать новый дом
+// POST /house — создать новый дом
 router.post("/", async (req: Request, res: Response) => {
 	const { name, region, words, slug } = req.body;
 

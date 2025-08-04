@@ -3,13 +3,10 @@ import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { GAUTH_CLIENT_ID, GAUTH_CLIENT_SECRET } from "../../config/passport";
 import { AppDataSource } from "../../config/data-source";
 import { User } from "../../entity/user";
-// import { APP_URL } from "../../config/app";
 
 const userRepo = AppDataSource.getRepository(User);
 
 const callbackURL = `/oauth/google/callback`;
-
-// console.log({ callbackURL });
 
 passport.use(
 	new GoogleStrategy(

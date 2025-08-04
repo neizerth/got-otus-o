@@ -14,6 +14,8 @@ import passport from "passport";
 import "./passport";
 import { adminMiddleware } from "./passport/admin/admin.middleware";
 
+import morgan from "morgan";
+
 const app: Application = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -21,6 +23,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
+
+app.use(morgan("tiny"));
 
 app.use(
 	session({

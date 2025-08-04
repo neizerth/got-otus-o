@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { AppDataSource } from "../data-source"; // путь к твоему DataSource
 import { Character } from "../entity/character";
 import { House } from "../entity/house";
+import { AppDataSource } from "../config/data-source";
 
 const router = Router();
 const characterRepo = AppDataSource.getRepository(Character);

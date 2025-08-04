@@ -26,13 +26,13 @@ router.get("/:id", async (req: Request, res: Response) => {
 
 // POST /houses — создать новый дом
 router.post("/", async (req: Request, res: Response) => {
-	const { name, region, words } = req.body;
+	const { name, region, words, slug } = req.body;
 
 	if (!name) {
 		return res.status(400).json({ message: "Name is required" });
 	}
 
-	const newHouse = houseRepo.create({ name, region, words });
+	const newHouse = houseRepo.create({ name, region, words, slug });
 	const saved = await houseRepo.save(newHouse);
 
 	res.status(201).json(saved);

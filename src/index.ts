@@ -1,36 +1,27 @@
-import { $log } from "@tsed/logger";
-import { PlatformExpress } from "@tsed/platform-express";
+import "dotenv/config";
+import express, { Application, Request, Response } from "express";
+import { PORT } from "./config/app";
+import cookieParser from "cookie-parser";
+import path from "node:path";
+import houseRouter from "./routes/house";
+import { AppDataSource } from "./config/data-source";
 
-import { Server } from "./Server.js";
+const app: Application = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, "public")));
 
-const SIG_EVENTS = [
-  "beforeExit",
-  "SIGHUP",
-  "SIGINT",
-  "SIGQUIT",
-  "SIGILL",
-  "SIGTRAP",
-  "SIGABRT",
-  "SIGBUS",
-  "SIGFPE",
-  "SIGUSR1",
-  "SIGSEGV",
-  "SIGUSR2",
-  "SIGTERM"
-];
+app.use("/house", houseRouter);
 
-try {
-  const platform = await PlatformExpress.bootstrap(Server);
-  await platform.listen();
+app.get("/", (req: Request, res: Response) => {
+	res.send("Hello, TypeScript + Express!");
+});
 
-  SIG_EVENTS.forEach((evt) => process.on(evt, () => platform.stop()));
+app.listen(PORT, () => {
+	console.log(`Server running at http://localhost:${PORT}`);
+});
 
-  ["uncaughtException", "unhandledRejection"].forEach((evt) =>
-    process.on(evt, async (error) => {
-      $log.error({ event: "SERVER_" + evt.toUpperCase(), message: error.message, stack: error.stack });
-      await platform.stop();
-    })
-  );
-} catch (error) {
-  $log.error({ event: "SERVER_BOOTSTRAP_ERROR", message: error.message, stack: error.stack });
-}
+AppDataSource.initialize().then(() => {
+	console.log("Data Source has been initialized!");
+});
